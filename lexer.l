@@ -1,67 +1,66 @@
 %{
-#include "lexer.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <math.h>
-%}
+//#include "lexer.h"
+#include "parser.tab.h"
+extern int line_num;
 
-%option case-insensitive
+%}
 %option yylineno
 %option noyywrap
 
-LETTER      [a-zA-Z]
-DIGIT       [0-9]
-CHARACTER   {LETTER}|{DIGIT}
-NZNUMBER    [1-9]{DIGIT}*|0
+%%
 
-ID          _?{LETTER}({LETTER}|{DIGIT}|_)*
-ICONST      {NZNUMBER}
-FCONST      {NZNUMBER}\.{DIGIT}*
-CCONST      \'.\'
-WHITESPACE  [ \t]
+[ \t\r]+             ;   
+\n                   { line_num++; }
+
+"<MYHTML>" { return MYHTML; }
+"<\/MYHTML>"  { return MYHTML_CLOSE; }
+
+"<head>" {return HEAD;}
+"<\/head>" { return HEAD_CLOSE;}
+"<meta" {return META;}
+"<title>" {return TITLE;}
+"<\/title>" {return TITLE_CLOSE;}
+
+
+"<body>" {return BODY;}
+"<\/body>" { return BODY_CLOSE;}
+"<p" {return P;}
+"<\/p>" {return P_CLOSE;}
+"<a" {return A;}
+"<\/a>" { return A_CLOSE;}
+"<img" {return IMG;}
+"<\/img>" { return IMG_CLOSE;}
+"<form" { return FORM;}
+"<\/form>" { return FORM_CLOSE;}
+"<input" {return INPUT;}
+"<label" {return LABEL;}
+"<\/label>" {return LABEL_CLOSE;}
+"<div" {return DIV;}
+"<\/div>" {  return DIV_CLOSE;}
+
+"charset" {return CHARSET;}
+"name" {return NAME;}
+"content" {return CONTENT;}
+"style" {return STYLE;}
+"href" {return HREF;}
+"src" {return SRC;}
+"alt" {return ALT;}
+"width" {return WIDTH;}
+"height" {return HEIGHT;}
+"type" {return TYPE;}
+"value" {return VALUE;}
+"for" {return FOR;}
+"id" {return ID;}
+
+">" {return TAG_CLOSE;}
+"=" {return EQUAL;}
+[1-9][0-9]*|0 {return NUMBER;} 
+\"[a-zA-Z0-9_-]+\" { yylval.str = strdup(yytext); return STRING; }
+^<>]+ {yylval.str = strdup(yytext);return TEXT;}
+"<!--"([^-]|"-"[^-])*"-->" {return COMMENT;}
+
+
+. 
 
 %%
 
-"<MYHTML>" { printf("KEYWORD -> myHTML\n"); return MYHTML; }
-"<\/MYHTML>"  { printf("KEYWORD -> myHTML_close\n"); return MYHTML_CLOSE; }
-
-"<head>" { printf("KEYWORD -> HEAD\n"); return HEAD;}
-"<\/head>" { printf("KEYWORD -> HEAD_CLOSE\n"); return HEAD_CLOSE;}
-"<meta>" { printf("KEYWORD -> META\n"); return META;}
-"<title>" { printf("KEYWORD -> TITLE\n"); return TITLE;}
-"<\/title>" { printf("KEYWORD -> TITLE_CLOSE\n"); return TITLE_CLOSE;}
-
-"<body>" { printf("KEYWORD -> BODY\n"); return BODY;}
-"<\/body>" { printf("KEYWORD -> BODY_CLOSE\n"); return BODY_CLOSE;}
-"<p>" { printf("KEYWORD -> P\n"); return P;}
-"<\/p>" { printf("KEYWORD -> P_CLOSE\n"); return P_CLOSE;}
-"<a>" { printf("KEYWORD -> A\n"); return A;}
-"<\/a>" { printf("KEYWORD -> A_CLOSE\n"); return A_CLOSE;}
-"<IMG>" { printf("KEYWORD -> IMG\n"); return IMG;}
-"<\/IMG>" { printf("KEYWORD -> IMG_CLOSE\n"); return IMG_CLOSE;}
-"<a>" { printf("KEYWORD -> A\n"); return A;}
-"<\/a>" { printf("KEYWORD -> A_CLOSE\n"); return A_CLOSE;}
-"<a>" { printf("KEYWORD -> A\n"); return A;}
-"<\/a>" { printf("KEYWORD -> A_CLOSE\n"); return A_CLOSE;}
-%%
-
-int main(int argc, char* argv[]) {
-
-    int token; 
-
-    yyin = fopen("test.c", "r"); // Το yyin είναι ειδική μεταβλητή του Flex.
-                                // Ισοδυναμεί με ένα FILE Pointer για να διαβάζει το αρχείο ο Flex
-
-    if (yyin == NULL) {
-        printf("File not found\n");
-        return 1;
-    }
-
-    do { // Μέχρι να φτάσουμε στο EOF διαβάζουμε κάθε Token μέσα απο το αρχείο.
-        token = yylex();
-    } while (token != T_EOF);
-
-    return 0;
-}
