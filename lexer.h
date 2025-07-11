@@ -1,5 +1,5 @@
 // MYHTML
-#define MYHTML 
+#define MYHTML 1
 #define MYHTML_CLOSE 2
 #define HEAD 3
 #define HEAD_CLOSE 4

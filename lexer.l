@@ -1,11 +1,10 @@
 %{
 //#include "lexer.h"
 #include "parser.tab.h"
+#include <string.h>
 extern int line_num;
 
 %}
-%option yylineno
-%option noyywrap
 
 %%
 
@@ -54,13 +53,11 @@ extern int line_num;
 
 ">" {return TAG_CLOSE;}
 "=" {return EQUAL;}
-[1-9][0-9]*|0 {return NUMBER;} 
+[1-9][0-9]*|0 {return NUMBER;}
 \"[a-zA-Z0-9_-]+\" { yylval.str = strdup(yytext); return STRING; }
-^<>]+ {yylval.str = strdup(yytext);return TEXT;}
 "<!--"([^-]|"-"[^-])*"-->" {return COMMENT;}
-
-
-. 
+[^<>]+ {yylval.str = strdup(yytext);return TEXT;} 
+.
 
 %%
 

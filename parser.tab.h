@@ -94,10 +94,11 @@ extern int yydebug;
     IDENTIFIER = 295,              /* IDENTIFIER  */
     STRING = 296,                  /* STRING  */
     TEXT = 297,                    /* TEXT  */
-    NUMBER = 298,                  /* NUMBER  */
-    COMMENT = 299,                 /* COMMENT  */
-    EOL = 300,                     /* EOL  */
-    T_EOF = 301                    /* T_EOF  */
+    TEXT60 = 298,                  /* TEXT60  */
+    NUMBER = 299,                  /* NUMBER  */
+    COMMENT = 300,                 /* COMMENT  */
+    EOL = 301,                     /* EOL  */
+    T_EOF = 302                    /* T_EOF  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -106,12 +107,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 9 "parser.y"
+#line 11 "parser.y"
 
     char* str;   // For IDENTIFIERs or strings
     int   num;   // For numeric tokens, if needed
 
-#line 115 "parser.tab.h"
+#line 116 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

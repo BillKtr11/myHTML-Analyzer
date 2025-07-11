@@ -6,17 +6,14 @@ void yyerror(const char *s);
 int line_num = 1;
 %}
 
+%start myhtml
+
 %union {
     char* str;   // For IDENTIFIERs or strings
     int   num;   // For numeric tokens, if needed
 }
 
-%token MYHTML
-%token MYHTML_CLOSE
-%token HEAD
-%token HEAD_CLOSE
-%token BODY
-%token BODY_CLOSE
+%token MYHTML MYHTML_CLOSE HEAD HEAD_CLOSE BODY BODY_CLOSE
 
 %token TITLE
 %token TITLE_CLOSE
@@ -50,12 +47,7 @@ int line_num = 1;
 %token FOR
 %token ID
 
-%token EQUAL
-%token TAG_CLOSE
-%token IDENTIFIER
-%token STRING
-%token <str> TEXT
-%token NUMBER
+%token EQUAL TAG_CLOSE IDENTIFIER STRING <str> TEXT NUMBER
 
 %token COMMENT
 
@@ -120,8 +112,9 @@ label: LABEL label_attributes TAG_CLOSE text_opt LABEL_CLOSE;
 label_attributes: label_required label_optional | label_optional label_required;
 label_required: id for | for id;
 label_optional:  style | ;
-text_opt: TEXT | ;
-
+text_opt:
+    TEXT   { free($1); }
+;
 for: FOR EQUAL STRING;
 
 title: TITLE text_opt TITLE_CLOSE;
@@ -137,7 +130,7 @@ content: CONTENT EQUAL STRING;
 %%
 
 void yyerror(const char *s) {
-    fprintf(stderr, "Syntax Error: %s at line %d\n", s, line_num);
+    fprintf(stderr, "Syntax Error: %s at line %d\n",s,  line_num);
 }
 
 int main(int argc, char **argv) {
