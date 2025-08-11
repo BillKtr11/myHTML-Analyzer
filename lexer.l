@@ -1,29 +1,27 @@
 %{
 //#include "lexer.h"
 #include "parser.tab.h"
-#include <string.h>
 extern int line_num;
 
 %}
+%option yylineno
+%option noyywrap
 
 %%
 
-[ \t\r]+             ;   
+[ \t\r]+             ;
 \n                   { line_num++; }
 
 "<MYHTML>" { return MYHTML; }
 "<\/MYHTML>"  { return MYHTML_CLOSE; }
-
 "<head>" {return HEAD;}
 "<\/head>" { return HEAD_CLOSE;}
 "<meta" {return META;}
 "<title>" {return TITLE;}
 "<\/title>" {return TITLE_CLOSE;}
-
-
 "<body>" {return BODY;}
 "<\/body>" { return BODY_CLOSE;}
-"<p" {return P;}
+"<p" {return P; }
 "<\/p>" {return P_CLOSE;}
 "<a" {return A;}
 "<\/a>" { return A_CLOSE;}
@@ -36,28 +34,39 @@ extern int line_num;
 "<\/label>" {return LABEL_CLOSE;}
 "<div" {return DIV;}
 "<\/div>" {  return DIV_CLOSE;}
-
-"charset" {return CHARSET;}
-"name" {return NAME;}
-"content" {return CONTENT;}
-"style" {return STYLE;}
-"href" {return HREF;}
-"src" {return SRC;}
-"alt" {return ALT;}
-"width" {return WIDTH;}
-"height" {return HEIGHT;}
-"type" {return TYPE;}
+"charset"[ ]* {return CHARSET;}
+"name"[ ]* {return NAME;}
+"content"[ ]* {return CONTENT;}
+"style"[ ]* {return STYLE;}
+"href"[ ]* {return HREF;}
+"src"[ ]* {return SRC;}
+"alt"[ ]* {return ALT;}
+"width"[ ]* {return WIDTH;}
+"height"[ ]* {return HEIGHT;}
+"type"[ ]* {return TYPE;}
 "value" {return VALUE;}
-"for" {return FOR;}
-"id" {return ID;}
-
-">" {return TAG_CLOSE;}
+"for"[ ]* {return FOR;}
+"id"[ ]* {return ID;}
+"checkbox_count"[ ]* {return CHECKBOX_COUNT;}
 "=" {return EQUAL;}
-[1-9][0-9]*|0 {return NUMBER;}
-\"[a-zA-Z0-9_-]+\" { yylval.str = strdup(yytext); return STRING; }
-"<!--"([^-]|"-"[^-])*"-->" {return COMMENT;}
-[^<>]+ {yylval.str = strdup(yytext);return TEXT;} 
-.
+">" {return TAG_CLOSE;}
+
+[1-9][0-9]*|0 {
+    yylval.num = atoi(yytext);  // convert matched text to integer
+    return NUMBER;
+}
+\"[^\"]*\" {
+    int len = yyleng;
+    char* raw = strdup(yytext + 1);  // skip the first quote
+    raw[len - 2] = '\0';             // remove trailing quote
+    yylval.str = raw;
+    return STRING;
+}
+"<!--"([^-]|"-"[^-])*"-->"[ ]* {return COMMENT;}
+[^<>\n"=\t\r ][^<>\n"=\t\r ]* { 
+  yylval.str = strdup(yytext);
+  return TEXT; 
+}
+
 
 %%
-

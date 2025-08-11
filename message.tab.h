@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_PARSER_TAB_H_INCLUDED
-# define YY_YY_PARSER_TAB_H_INCLUDED
+#ifndef YY_YY_MESSAGE_TAB_H_INCLUDED
+# define YY_YY_MESSAGE_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -88,17 +88,16 @@ extern int yydebug;
     TYPE = 289,                    /* TYPE  */
     VALUE = 290,                   /* VALUE  */
     FOR = 291,                     /* FOR  */
-    EQUAL = 292,                   /* EQUAL  */
-    TAG_CLOSE = 293,               /* TAG_CLOSE  */
-    IDENTIFIER = 294,              /* IDENTIFIER  */
-    STRING = 295,                  /* STRING  */
+    ID = 292,                      /* ID  */
+    EQUAL = 293,                   /* EQUAL  */
+    TAG_CLOSE = 294,               /* TAG_CLOSE  */
+    IDENTIFIER = 295,              /* IDENTIFIER  */
     TEXT = 296,                    /* TEXT  */
-    NUMBER = 297,                  /* NUMBER  */
-    ID = 298,                      /* ID  */
+    STRING = 297,                  /* STRING  */
+    NUMBER = 298,                  /* NUMBER  */
     COMMENT = 299,                 /* COMMENT  */
-    CHECKBOX_COUNT = 300,          /* CHECKBOX_COUNT  */
-    EOL = 301,                     /* EOL  */
-    T_EOF = 302                    /* T_EOF  */
+    EOL = 300,                     /* EOL  */
+    T_EOF = 301                    /* T_EOF  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -107,12 +106,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 122 "parser.y"
+#line 9 "message.y"
 
-    char* str;   // For IDENTIFIERs or strings
-    int   num;   // For numeric tokens, if needed
+    char* str;
+    int   num;
 
-#line 116 "parser.tab.h"
+#line 115 "message.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -127,4 +126,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
+#endif /* !YY_YY_MESSAGE_TAB_H_INCLUDED  */
