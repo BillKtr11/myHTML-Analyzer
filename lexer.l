@@ -1,5 +1,4 @@
 %{
-//#include "lexer.h"
 #include "parser.tab.h"
 extern int line_num;
 
@@ -52,13 +51,13 @@ extern int line_num;
 ">" {return TAG_CLOSE;}
 
 [1-9][0-9]*|0 {
-    yylval.num = atoi(yytext);  // convert matched text to integer
+    yylval.num = atoi(yytext);  
     return NUMBER;
 }
 \"[^\"]*\" {
     int len = yyleng;
-    char* raw = strdup(yytext + 1);  // skip the first quote
-    raw[len - 2] = '\0';             // remove trailing quote
+    char* raw = strdup(yytext + 1);  
+    raw[len - 2] = '\0';             
     yylval.str = raw;
     return STRING;
 }
