@@ -60,18 +60,15 @@ int is_valid_style(const char *s) {
         char *prop = token;
         char *val = colon + 1;
 
-        // Trim spaces (προαιρετικό)
         while (*prop==' ') prop++;
         while (*val==' ') val++;
         
-        // Έλεγχος property
         int prop_ok = strcmp(prop,"background_color")==0 ||
                       strcmp(prop,"color")==0 ||
                       strcmp(prop,"font_family")==0 ||
                       strcmp(prop,"font_size")==0;
         if (!prop_ok) return 0;
 
-        // Έλεγχος τιμής
         if (strcmp(prop,"font_size")==0) {
             int n = atoi(val);
             int L = strlen(val);
@@ -80,7 +77,6 @@ int is_valid_style(const char *s) {
             if (strlen(val)==0) return 0;
         }
 
-        // Μοναδικότητα
         for(int i=0;i<seen_cnt;i++)
             if (strcmp(seen[i], prop)==0) return 0;
         strcpy(seen[seen_cnt++], prop);
@@ -98,8 +94,8 @@ int is_valid_style(const char *s) {
 %start myhtml
 
 %union {
-    char* str;   // For IDENTIFIERs or strings
-    int   num;   // For numeric tokens, if needed
+    char* str;  
+    int   num;
 }
 
 %token MYHTML MYHTML_CLOSE HEAD HEAD_CLOSE BODY BODY_CLOSE
@@ -265,14 +261,13 @@ form_required: input | label ;
 form_optional: input | label | input form_optional | label form_optional |  ;
 
 input: INPUT input_attributes TAG_CLOSE{
-    // έλεγχος τύπου input
     for (int j = 0; j < input_attribute_counter; j++) {
         if (strcmp(input_types[j], "submit") == 0)
             submit_count++;
         else if (strcmp(input_types[j], "checkbox") == 0)
             checkbox_count_in_form++;
     }
-    input_attribute_counter = 0; // reset
+    input_attribute_counter = 0;
 };
 
 input_attributes: input_required input_optional | input_optional input_required;
@@ -284,7 +279,6 @@ input_required: id type {strcpy(input_ids[input_id_counter++], $1);}
 input_optional: value | style | value style | style value | ;
 
 type: TYPE EQUAL STRING {
-    // Ελέγχει αν είναι έγκυρη τιμή τύπου
     if (strcmp($3, "text") != 0 &&
         strcmp($3, "checkbox") != 0 &&
         strcmp($3, "radio") != 0 &&
@@ -294,12 +288,7 @@ type: TYPE EQUAL STRING {
         YYABORT;
     }
 
-    // Φυλάσσει τους τύπους input για μελλοντικό έλεγχο
     strcpy(input_types[input_type_counter], $3);
-
-    // Αν είναι submit, αύξησε counter
-//    if (strcmp($3, "submit") == 0)
-//        submit_count++;
 
     input_type_counter++;
 
@@ -323,7 +312,7 @@ text_opt:
                 char buffer[20];    
                 sprintf(buffer, "%d", abs($1)); 
                 $$ = strlen(buffer);}
-  | TEXT text_opt      { $$ = strlen($1) + 1 + $2;free($1);}   // +1 for space
+  | TEXT text_opt      { $$ = strlen($1) + 1 + $2;free($1);}  
   | NUMBER text_opt    {
                 char buffer[20];    
                 sprintf(buffer, "%d", abs($1)); 
@@ -342,7 +331,6 @@ for: FOR EQUAL STRING{
         YYABORT;
     }
 
-    // Εξασφάλιση μοναδικότητας for-id
     for (int j = 0; j < for_id_counter; j++) {
         if (strcmp(used_in_for[j], $3) == 0) {
             fprintf(stderr, "Error at line %d: Input id \"%s\" used in multiple <label> for attributes\n",line_num, $3);
@@ -398,5 +386,6 @@ int main(int argc, char **argv) {
     fclose(f);
     return 0;
 }
+
 
 
