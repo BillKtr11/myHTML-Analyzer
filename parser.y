@@ -90,26 +90,7 @@ int is_valid_style(const char *s) {
     
     return 1;
 }
-//int href_check(const char* val){  
-//    if (!is_valid_href(val)) {
-//        fprintf(stderr, "Error at line %d: Invalid href format '%s'\n",line_num, val);
-//        return 0;
-//    }
-//    if (val[0] == '#') {
-//        const char* target = val + 1;
-//        int found = 0;
-//        for (int j = 0; j < id_counter; j++) {
-//            if (strcmp(id_holder[j], target) == 0) {
-//                found = 1;
-//                return found;
-//            }
-//        }
-//        if (!found) {
-//            fprintf(stderr, "Error at line %d: Href '%s' references unknown id\n",line_num, val);
-//            return 0;
-//        }
-//    }
-//}
+
 %}
 %type <str> id type
 %type <str> href
@@ -257,7 +238,6 @@ form: FORM form_attributes TAG_CLOSE comment_opt form_content comment_opt FORM_C
         }
     }
 
-    // reset for next form
     submit_count = 0;
     input_type_counter = 0;
     checkbox_expected = 0;
@@ -418,4 +398,5 @@ int main(int argc, char **argv) {
     fclose(f);
     return 0;
 }
+
 
