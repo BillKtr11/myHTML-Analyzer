@@ -42,9 +42,6 @@ int is_valid_href(const char* s) {
          }
     }
     return 0;
-    /* Σχετικό URL (π.χ. ξεκινάει με γράμμα ή αριθμό) */
-//    if (isalnum((unsigned char)s[0]))
-//        return 1;
 }
 
 int is_valid_style(const char *s) {
@@ -421,3 +418,4 @@ int main(int argc, char **argv) {
     fclose(f);
     return 0;
 }
+
