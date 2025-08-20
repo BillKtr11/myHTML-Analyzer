@@ -17,7 +17,6 @@ int input_id_counter = 0;
 
 char used_in_for[SIZE][SIZE];    // Για να κρατάμε τα id που έχουν ήδη χρησιμοποιηθεί σε for
 int for_id_counter = 0;
-int input_attribute_counter = 0;
 int checkbox_expected = 0;
 int checkbox_count_in_form = 0;
 int checkbox_count_set = 0;
@@ -90,7 +89,9 @@ int is_valid_style(const char *s) {
 %}
 %type <str> id type
 %type <str> href
-%type <str> text_opt 
+%type <str> text_opt
+%type <str> input_required
+%type <str> input_attributes 
 %start myhtml
 
 %union {
@@ -127,7 +128,7 @@ int is_valid_style(const char *s) {
 %token ALT
 %token WIDTH
 %token HEIGHT
-%token TYPE
+%token <str> TYPE
 %token VALUE
 %token FOR
 
@@ -261,18 +262,15 @@ form_required: input | label ;
 form_optional: input | label | input form_optional | label form_optional |  ;
 
 input: INPUT input_attributes TAG_CLOSE{
-    for (int j = 0; j < input_attribute_counter; j++) {
-        if (strcmp(input_types[j], "submit") == 0)
-            submit_count++;
-        else if (strcmp(input_types[j], "checkbox") == 0)
-            checkbox_count_in_form++;
-    }
-    input_attribute_counter = 0;
+    if (strcmp($2, "submit") == 0)
+        submit_count++;
+    else if (strcmp($2, "checkbox") == 0)
+        checkbox_count_in_form++;
 };
 
-input_attributes: input_required input_optional | input_optional input_required;
-input_required: id type {strcpy(input_ids[input_id_counter++], $1);}
-                | type id {strcpy(input_ids[input_id_counter++], $2);};
+input_attributes: input_required input_optional{$$ = $1;}| input_optional input_required {$$ = $2;};
+input_required: id type {strcpy(input_ids[input_id_counter++], $1);$$ = $2;}
+                | type id {strcpy(input_ids[input_id_counter++], $2); $$ = $1;};
 
 
 
@@ -288,11 +286,8 @@ type: TYPE EQUAL STRING {
         YYABORT;
     }
 
-    strcpy(input_types[input_type_counter], $3);
-
-    input_type_counter++;
-
-    strcpy(input_types[input_attribute_counter++], $3);
+    strcpy(input_types[input_type_counter++], $3);
+    $$ = $3;
 };
 
 value: VALUE EQUAL STRING;

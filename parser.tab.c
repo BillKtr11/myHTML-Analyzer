@@ -112,9 +112,6 @@ int is_valid_href(const char* s) {
          }
     }
     return 0;
-    /* Σχετικό URL (π.χ. ξεκινάει με γράμμα ή αριθμό) */
-//    if (isalnum((unsigned char)s[0]))
-//        return 1;
 }
 
 int is_valid_style(const char *s) {
@@ -133,18 +130,15 @@ int is_valid_style(const char *s) {
         char *prop = token;
         char *val = colon + 1;
 
-        // Trim spaces (προαιρετικό)
         while (*prop==' ') prop++;
         while (*val==' ') val++;
         
-        // Έλεγχος property
         int prop_ok = strcmp(prop,"background_color")==0 ||
                       strcmp(prop,"color")==0 ||
                       strcmp(prop,"font_family")==0 ||
                       strcmp(prop,"font_size")==0;
         if (!prop_ok) return 0;
 
-        // Έλεγχος τιμής
         if (strcmp(prop,"font_size")==0) {
             int n = atoi(val);
             int L = strlen(val);
@@ -153,7 +147,6 @@ int is_valid_style(const char *s) {
             if (strlen(val)==0) return 0;
         }
 
-        // Μοναδικότητα
         for(int i=0;i<seen_cnt;i++)
             if (strcmp(seen[i], prop)==0) return 0;
         strcpy(seen[seen_cnt++], prop);
@@ -163,28 +156,9 @@ int is_valid_style(const char *s) {
     
     return 1;
 }
-//int href_check(const char* val){  
-//    if (!is_valid_href(val)) {
-//        fprintf(stderr, "Error at line %d: Invalid href format '%s'\n",line_num, val);
-//        return 0;
-//    }
-//    if (val[0] == '#') {
-//        const char* target = val + 1;
-//        int found = 0;
-//        for (int j = 0; j < id_counter; j++) {
-//            if (strcmp(id_holder[j], target) == 0) {
-//                found = 1;
-//                return found;
-//            }
-//        }
-//        if (!found) {
-//            fprintf(stderr, "Error at line %d: Href '%s' references unknown id\n",line_num, val);
-//            return 0;
-//        }
-//    }
-//}
 
-#line 188 "parser.tab.c"
+
+#line 162 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -703,18 +677,18 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   172,   172,   174,   174,   174,   175,   175,   176,   177,
-     177,   179,   181,   181,   182,   182,   182,   182,   182,   182,
-     184,   185,   185,   185,   187,   206,   213,   214,   214,   215,
-     215,   215,   217,   225,   226,   226,   227,   227,   227,   227,
-     227,   227,   228,   228,   228,   228,   228,   230,   236,   237,
-     238,   240,   271,   272,   273,   274,   275,   276,   277,   278,
-     279,   281,   286,   287,   287,   288,   288,   288,   288,   288,
-     290,   301,   301,   302,   303,   307,   307,   307,   307,   307,
-     309,   332,   334,   335,   335,   335,   336,   336,   337,   337,
-     337,   337,   337,   339,   340,   340,   341,   341,   342,   342,
-     344,   345,   349,   350,   354,   379,   386,   387,   387,   387,
-     387,   389,   390,   391
+       0,   148,   148,   150,   150,   150,   151,   151,   152,   153,
+     153,   155,   157,   157,   158,   158,   158,   158,   158,   158,
+     160,   161,   161,   161,   163,   182,   189,   190,   190,   191,
+     191,   191,   193,   201,   202,   202,   203,   203,   203,   203,
+     203,   203,   204,   204,   204,   204,   204,   206,   212,   213,
+     214,   216,   246,   247,   248,   249,   250,   251,   252,   253,
+     254,   256,   261,   262,   262,   263,   263,   263,   263,   263,
+     265,   272,   272,   273,   274,   278,   278,   278,   278,   278,
+     280,   294,   296,   297,   297,   297,   298,   298,   299,   299,
+     299,   299,   299,   301,   302,   302,   303,   303,   304,   304,
+     306,   307,   311,   312,   316,   340,   347,   348,   348,   348,
+     348,   350,   351,   352
 };
 #endif
 
@@ -1428,7 +1402,7 @@ yyreduce:
   switch (yyn)
     {
   case 24: /* id: ID EQUAL STRING  */
-#line 187 "parser.y"
+#line 163 "parser.y"
                     {
 
   for(i=0;i<id_counter;i++){
@@ -1447,22 +1421,22 @@ strcpy(id_holder[id_counter++],(yyvsp[0].str));
 
 
 }
-#line 1451 "parser.tab.c"
+#line 1425 "parser.tab.c"
     break;
 
   case 25: /* style: STYLE EQUAL STRING  */
-#line 206 "parser.y"
+#line 182 "parser.y"
                          {
     if (!is_valid_style((yyvsp[0].str))) {
         fprintf(stderr, "Error at line %d: Invalid style attribute '%s'\n",line_num, (yyvsp[0].str));
         YYABORT;
     }
 }
-#line 1462 "parser.tab.c"
+#line 1436 "parser.tab.c"
     break;
 
   case 32: /* href: HREF EQUAL STRING  */
-#line 217 "parser.y"
+#line 193 "parser.y"
                         { 
         if (!is_valid_href((yyvsp[0].str))) {
         fprintf(stderr, "Error at line %d: Invalid src URL '%s'\n",line_num, (yyvsp[0].str));
@@ -1470,22 +1444,22 @@ strcpy(id_holder[id_counter++],(yyvsp[0].str));
         (yyval.str) = (yyvsp[0].str);
         }
 }
-#line 1474 "parser.tab.c"
+#line 1448 "parser.tab.c"
     break;
 
   case 47: /* src: SRC EQUAL STRING  */
-#line 230 "parser.y"
+#line 206 "parser.y"
                      {
     if (!is_valid_src((yyvsp[0].str))) {
         fprintf(stderr, "Error at line %d: Invalid src URL '%s'\n",line_num, (yyvsp[0].str));
         YYABORT;
     }
 }
-#line 1485 "parser.tab.c"
+#line 1459 "parser.tab.c"
     break;
 
   case 51: /* form: FORM form_attributes TAG_CLOSE comment_opt form_content comment_opt FORM_CLOSE  */
-#line 240 "parser.y"
+#line 216 "parser.y"
                                                                                      {
     if (submit_count > 1) {
         fprintf(stderr, "Error at line %d: Multiple submit inputs in a single form\n",line_num);
@@ -1509,57 +1483,63 @@ strcpy(id_holder[id_counter++],(yyvsp[0].str));
         }
     }
 
-    // reset for next form
     submit_count = 0;
     input_type_counter = 0;
     checkbox_expected = 0;
     checkbox_count_in_form = 0;
     checkbox_count_set = 0;
 }
-#line 1520 "parser.tab.c"
+#line 1493 "parser.tab.c"
     break;
 
   case 61: /* checkbox_count: CHECKBOX_COUNT EQUAL NUMBER  */
-#line 281 "parser.y"
+#line 256 "parser.y"
                                             {
     checkbox_expected = (yyvsp[0].num);
     checkbox_count_in_form = 0;
     checkbox_count_set = 1;
 }
-#line 1530 "parser.tab.c"
+#line 1503 "parser.tab.c"
     break;
 
   case 70: /* input: INPUT input_attributes TAG_CLOSE  */
-#line 290 "parser.y"
+#line 265 "parser.y"
                                        {
-    // έλεγχος τύπου input
-    for (int j = 0; j < input_attribute_counter; j++) {
-        if (strcmp(input_types[j], "submit") == 0)
-            submit_count++;
-        else if (strcmp(input_types[j], "checkbox") == 0)
-            checkbox_count_in_form++;
-    }
-    input_attribute_counter = 0; // reset
+    if (strcmp((yyvsp[-1].str), "submit") == 0)
+        submit_count++;
+    else if (strcmp((yyvsp[-1].str), "checkbox") == 0)
+        checkbox_count_in_form++;
 }
-#line 1545 "parser.tab.c"
+#line 1514 "parser.tab.c"
+    break;
+
+  case 71: /* input_attributes: input_required input_optional  */
+#line 272 "parser.y"
+                                               {(yyval.str) = (yyvsp[-1].str);}
+#line 1520 "parser.tab.c"
+    break;
+
+  case 72: /* input_attributes: input_optional input_required  */
+#line 272 "parser.y"
+                                                                                         {(yyval.str) = (yyvsp[0].str);}
+#line 1526 "parser.tab.c"
     break;
 
   case 73: /* input_required: id type  */
-#line 302 "parser.y"
-                        {strcpy(input_ids[input_id_counter++], (yyvsp[-1].str));}
-#line 1551 "parser.tab.c"
+#line 273 "parser.y"
+                        {strcpy(input_ids[input_id_counter++], (yyvsp[-1].str));(yyval.str) = (yyvsp[0].str);}
+#line 1532 "parser.tab.c"
     break;
 
   case 74: /* input_required: type id  */
-#line 303 "parser.y"
-                          {strcpy(input_ids[input_id_counter++], (yyvsp[0].str));}
-#line 1557 "parser.tab.c"
+#line 274 "parser.y"
+                          {strcpy(input_ids[input_id_counter++], (yyvsp[0].str)); (yyval.str) = (yyvsp[-1].str);}
+#line 1538 "parser.tab.c"
     break;
 
   case 80: /* type: TYPE EQUAL STRING  */
-#line 309 "parser.y"
+#line 280 "parser.y"
                         {
-    // Ελέγχει αν είναι έγκυρη τιμή τύπου
     if (strcmp((yyvsp[0].str), "text") != 0 &&
         strcmp((yyvsp[0].str), "checkbox") != 0 &&
         strcmp((yyvsp[0].str), "radio") != 0 &&
@@ -1569,52 +1549,44 @@ strcpy(id_holder[id_counter++],(yyvsp[0].str));
         YYABORT;
     }
 
-    // Φυλάσσει τους τύπους input για μελλοντικό έλεγχο
-    strcpy(input_types[input_type_counter], (yyvsp[0].str));
-
-    // Αν είναι submit, αύξησε counter
-//    if (strcmp($3, "submit") == 0)
-//        submit_count++;
-
-    input_type_counter++;
-
-    strcpy(input_types[input_attribute_counter++], (yyvsp[0].str));
+    strcpy(input_types[input_type_counter++], (yyvsp[0].str));
+    (yyval.str) = (yyvsp[0].str);
 }
-#line 1584 "parser.tab.c"
+#line 1556 "parser.tab.c"
     break;
 
   case 100: /* text_opt: TEXT  */
-#line 344 "parser.y"
+#line 306 "parser.y"
                        { (yyval.str) = strlen((yyvsp[0].str));}
-#line 1590 "parser.tab.c"
+#line 1562 "parser.tab.c"
     break;
 
   case 101: /* text_opt: NUMBER  */
-#line 345 "parser.y"
+#line 307 "parser.y"
                        {
                 char buffer[20];    
                 sprintf(buffer, "%d", abs((yyvsp[0].num))); 
                 (yyval.str) = strlen(buffer);}
-#line 1599 "parser.tab.c"
+#line 1571 "parser.tab.c"
     break;
 
   case 102: /* text_opt: TEXT text_opt  */
-#line 349 "parser.y"
+#line 311 "parser.y"
                        { (yyval.str) = strlen((yyvsp[-1].str)) + 1 + (yyvsp[0].str);free((yyvsp[-1].str));}
-#line 1605 "parser.tab.c"
+#line 1577 "parser.tab.c"
     break;
 
   case 103: /* text_opt: NUMBER text_opt  */
-#line 350 "parser.y"
+#line 312 "parser.y"
                        {
                 char buffer[20];    
                 sprintf(buffer, "%d", abs((yyvsp[-1].num))); 
                 (yyval.str) = strlen(buffer) + 1 + (yyvsp[0].str);}
-#line 1614 "parser.tab.c"
+#line 1586 "parser.tab.c"
     break;
 
   case 104: /* for: FOR EQUAL STRING  */
-#line 354 "parser.y"
+#line 316 "parser.y"
                      {
     int found = 0;
     for (int j = 0; j < input_id_counter; j++) {
@@ -1629,7 +1601,6 @@ strcpy(id_holder[id_counter++],(yyvsp[0].str));
         YYABORT;
     }
 
-    // Εξασφάλιση μοναδικότητας for-id
     for (int j = 0; j < for_id_counter; j++) {
         if (strcmp(used_in_for[j], (yyvsp[0].str)) == 0) {
             fprintf(stderr, "Error at line %d: Input id \"%s\" used in multiple <label> for attributes\n",line_num, (yyvsp[0].str));
@@ -1639,22 +1610,22 @@ strcpy(id_holder[id_counter++],(yyvsp[0].str));
 
     strcpy(used_in_for[for_id_counter++], (yyvsp[0].str));
 }
-#line 1643 "parser.tab.c"
+#line 1614 "parser.tab.c"
     break;
 
   case 105: /* title: TITLE comment_opt text_opt comment_opt TITLE_CLOSE  */
-#line 379 "parser.y"
+#line 340 "parser.y"
                                                          {
         if ((yyvsp[-2].str) > 60) {
             fprintf(stderr, "Error at line %d: Title exceeds 60 characters (%d)\n",line_num, (yyvsp[-2].str));
             YYABORT;
     }
 }
-#line 1654 "parser.tab.c"
+#line 1625 "parser.tab.c"
     break;
 
 
-#line 1658 "parser.tab.c"
+#line 1629 "parser.tab.c"
 
       default: break;
     }
@@ -1847,7 +1818,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 395 "parser.y"
+#line 356 "parser.y"
 
 
 void yyerror(const char *s) {
@@ -1877,3 +1848,6 @@ int main(int argc, char **argv) {
     fclose(f);
     return 0;
 }
+
+
+
