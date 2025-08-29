@@ -89,7 +89,7 @@ int is_valid_style(const char *s) {
 %}
 %type <str> id type
 %type <str> href
-%type <str> text_opt
+%type <num> text_opt
 %type <str> input_required
 %type <str> input_attributes 
 %start myhtml
@@ -187,11 +187,11 @@ style: STYLE EQUAL STRING{
 
 a: A a_attributes TAG_CLOSE comment_opt a_content comment_opt A_CLOSE;
 a_attributes: id href | href id ;
-a_content: img | TEXT |  ;
+a_content: img | TEXT | img a_content | TEXT a_content |   ;
 
 href: HREF EQUAL STRING { 
         if (!is_valid_href($3)) {
-        fprintf(stderr, "Error at line %d: Invalid src URL '%s'\n",line_num, $3);
+        fprintf(stderr, "Error at line %d: Invalid href URL '%s'\n",line_num, $3);
         YYABORT;
         $$ = $3;
         }
@@ -302,7 +302,7 @@ label_attributes: label_required label_optional | label_optional label_required;
 label_required: id for | for id;
 label_optional:  style | ;
 text_opt:
-    TEXT               { $$ = strlen($1);}
+    TEXT               { $$ = (int)strlen($1);}
   | NUMBER             {
                 char buffer[20];    
                 sprintf(buffer, "%d", abs($1)); 
@@ -311,7 +311,7 @@ text_opt:
   | NUMBER text_opt    {
                 char buffer[20];    
                 sprintf(buffer, "%d", abs($1)); 
-                $$ = strlen(buffer) + 1 + $2;}
+                $$ = strlen(buffer) + 1 + $2;};
 for: FOR EQUAL STRING{
     int found = 0;
     for (int j = 0; j < input_id_counter; j++) {
